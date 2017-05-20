@@ -8,6 +8,7 @@ class HumanPlayer
   end
 
   def display(board)
+    puts ""
     (0..2).each do |row|
       (0..2).each do |col|
         pos = [row, col]
@@ -17,12 +18,13 @@ class HumanPlayer
         end
         print " | " unless col == 2
       end
-      puts "\n--------" unless row == 2
+      puts "\n---------" unless row == 2
     end
+    puts "\n"
   end
 
-  def get_move
-    print "Where would you like to mark? (eg: '1 2'): "
+  def get_move(board = nil)
+    print "\n\nWhere would you like to mark? (eg: '1 2'): "
     gets.chomp.split.map(&:to_i)
   end
 

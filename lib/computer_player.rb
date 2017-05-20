@@ -11,16 +11,19 @@ class ComputerPlayer
     @board = board
   end
 
-  def get_move
+  def get_move(board)
     legit_moves = []
     (0..2).each do |row|
       (0..2).each do |col|
         pos = [row, col]
-        if @board[pos].nil?
+        if display(board)[pos].nil?
           legit_moves << pos
-          @board[pos] = mark
-          return pos if @board.winner == mark
-          @board[pos] = nil
+          display(board)[pos] = mark
+          if board.winner == mark
+            display(board)[pos] = nil
+            return pos
+          end
+          display(board)[pos] = nil
         end
       end
     end

@@ -1,3 +1,5 @@
+require 'byebug'
+
 require_relative 'board'
 require_relative 'human_player'
 require_relative 'computer_player'
@@ -8,7 +10,7 @@ class Game
   attr_reader :board, :player_one, :player_two
 
   def initialize(player_one, player_two)
-    @mark = mark
+    @mark = nil
     @board = Board.new
     @player_one = player_one
     @player_one.mark = :X
@@ -18,31 +20,27 @@ class Game
   end
 
   def switch_players!
-    if @current_player == @player_one
-      @current_player = @player_two
-    else @current_player = @player_one
-    end
+    @current_player = current_player == player_one ? player_two : player_one
   end
 
   def play_turn
-    pos = current_player.get_move
+    pos = current_player.get_move(board)
     mark = current_player.mark
     @board.place_mark(pos, mark)
+    @player_one.display(@board)
     switch_players!
   end
 
   def play
     puts "Welcome to Tic-Tac-Toe: The Game\n"
-    puts "Lets begin!"
+    puts "Lets begin!\n"
+    @player_one.display(@board)
 
     play_turn until @board.winner
     if @board.winner == :X
       puts "Congrats! You beat the computer!"
     else
       puts "Oops, guess the computer got the better of you this time."
-      print "Try again? (y/n)"
-      player_retry = gets.chomp
-      new_game.play if player_retry == "y" || player_retry == "Y"
       puts "\nBetter luck next time. Goodbye!"
     end
   end
@@ -50,6 +48,8 @@ class Game
 end
 
 if __FILE__ == $PROGRAM_NAME
-  new_game = Game.new("Zuhair", "Computer")
-  new_game.play
+  me = HumanPlayer.new("Zuhair")
+  pc = ComputerPlayer.new("Computer")
+  game = Game.new(me, pc)
+  game.play
 end
